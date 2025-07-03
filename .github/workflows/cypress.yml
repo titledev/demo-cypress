@@ -1,0 +1,42 @@
+name: Cypress Test External Project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Cypress Test Repo (Repo A)
+        uses: actions/checkout@v3
+
+      - name: Checkout Web App (Repo B)
+        uses: actions/checkout@v3
+        with:
+          repository: your-username/repo-b-webapp
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: webapp
+
+      - name: Install Web App
+        run: |
+          cd webapp
+          npm install
+
+      - name: Start Web App
+        run: |
+          cd webapp
+          npm run dev &
+        env:
+          HOST: 0.0.0.0
+
+      - name: Wait until Web App ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Install Cypress dependencies
+        run: npm install
+
+      - name: Run Cypress
+        run: npx cypress run
