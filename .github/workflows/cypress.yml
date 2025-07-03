@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
 
+  workflow_call: {}   # ✅ เปิดให้ repo อื่นเรียกใช้
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -46,4 +48,3 @@ jobs:
         with:
           name: cypress-report
           path: cypress/reports
-
