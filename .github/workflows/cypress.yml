@@ -6,19 +6,18 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Cypress repo
         uses: actions/checkout@v3
 
-      - name: Checkout Nuxt repo
+      - name: Checkout Nuxt app
         uses: actions/checkout@v3
         with:
           repository: titledev/demo-nuxt-cypress
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: nuxt-app
 
-      - name: Install Nuxt & start server
+      - name: Install Nuxt app
         run: |
           cd nuxt-app
           npm install
@@ -27,7 +26,7 @@ jobs:
         env:
           HOST: 0.0.0.0
 
-      - name: Wait for server
+      - name: Wait for Nuxt app
         run: npx wait-on http://localhost:3000
 
       - name: Install Cypress
@@ -35,3 +34,6 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
+        # 👇 กำหนดให้ baseUrl ไปที่ Nuxt server
+        env:
+          CYPRESS_baseUrl: http://localhost:3000
