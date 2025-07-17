@@ -4,39 +4,37 @@ on:
   workflow_call: {}
 
 jobs:
-  cypress-run:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Cypress repo
-        uses: actions/checkout@v3
+      - name: Checkout Nuxt project
+        uses: actions/checkout@v4
         with:
-          path: demo-cypress
-
-      - name: Checkout Nuxt app
-        uses: actions/checkout@v3
-        with:
-          repository: titledev/demo-nuxt-cypress
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: nuxt-app
 
-      - name: Install Nuxt
+      - name: Checkout Cypress project
+        uses: actions/checkout@v4
+        with:
+          repository: titledev/demo-cypress
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: cypress-app
+
+      - name: Install & run Nuxt
         run: |
-          cd nuxt-app
           npm install
           npm run build
           npm run preview &
-        env:
-          HOST: 0.0.0.0
+        working-directory: nuxt-app
 
-      - name: Wait for Nuxt
+      - name: Wait for Nuxt server
         run: npx wait-on http://localhost:3000
 
-      - name: Install Cypress deps
+      - name: Install Cypress dependencies
         run: npm install
-        working-directory: titledev/demo-cypress
+        working-directory: cypress-app
 
-      - name: Run Cypress tests ✅
+      - name: Run Cypress E2E tests
         run: npx cypress run
-        working-directory: titledev/demo-cypress
+        working-directory: cypress-app
         env:
           CYPRESS_baseUrl: http://localhost:3000
