@@ -33,10 +33,10 @@ jobs:
 
       - name: Install Cypress deps
         run: npm install
-        working-directory: ./../../demo-cypress
+        working-directory: titledev/demo-cypress
 
       - name: Run Cypress tests ✅
         run: npx cypress run
-        working-directory: ./demo-cypress
+        working-directory: titledev/demo-cypress
         env:
           CYPRESS_baseUrl: http://localhost:3000
