@@ -1,50 +1,37 @@
-name: Cypress Test External Project
+name: Run Cypress E2E
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-
-  workflow_call: {}   # ✅ เปิดให้ repo อื่นเรียกใช้
+  workflow_call: {}
 
 jobs:
-  test:
+  cypress-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Cypress Test Repo (Repo A)
+      - name: Checkout Cypress repo
         uses: actions/checkout@v3
 
-      - name: Checkout Web App (Repo B)
+      - name: Checkout Nuxt repo
         uses: actions/checkout@v3
         with:
           repository: titledev/demo-nuxt-cypress
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          path: webapp
+          path: nuxt-app
 
-      - name: Install Web App
+      - name: Install Nuxt & start server
         run: |
-          cd webapp
+          cd nuxt-app
           npm install
-
-      - name: Start Web App
-        run: |
-          cd webapp
-          npm run dev &
+          npm run build
+          npm run preview &
         env:
           HOST: 0.0.0.0
 
-      - name: Wait until Web App ready
+      - name: Wait for server
         run: npx wait-on http://localhost:3000
 
-      - name: Install Cypress dependencies
+      - name: Install Cypress
         run: npm install
 
-      - name: Run Cypress
+      - name: Run Cypress tests
         run: npx cypress run
-      
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-report
-          path: cypress/reports
