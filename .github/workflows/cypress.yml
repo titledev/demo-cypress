@@ -1,4 +1,4 @@
-name: Run Cypress E2E
+name: Cypress E2E
 
 on:
   workflow_call: {}
@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout Cypress repo
         uses: actions/checkout@v3
+        with:
+          path: demo-cypress
 
       - name: Checkout Nuxt app
         uses: actions/checkout@v3
@@ -17,7 +19,7 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: nuxt-app
 
-      - name: Install Nuxt app
+      - name: Install Nuxt
         run: |
           cd nuxt-app
           npm install
@@ -26,14 +28,15 @@ jobs:
         env:
           HOST: 0.0.0.0
 
-      - name: Wait for Nuxt app
+      - name: Wait for Nuxt
         run: npx wait-on http://localhost:3000
 
-      - name: Install Cypress
+      - name: Install Cypress deps
         run: npm install
+        working-directory: ./demo-cypress
 
-      - name: Run Cypress tests
+      - name: Run Cypress tests ✅
         run: npx cypress run
-        # 👇 กำหนดให้ baseUrl ไปที่ Nuxt server
+        working-directory: ./demo-cypress
         env:
           CYPRESS_baseUrl: http://localhost:3000
