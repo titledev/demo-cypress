@@ -14,4 +14,11 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
+// import "cypress-xpath";
+import "cypress-mochawesome-reporter/register";
+
+// Cypress.on("uncaught:exception", (err, runnable) => {
+//   // ป้องกันไม่ให้ Cypress หยุดทำงานจาก error ใดๆ ในแอป
+//   return false;
+// });
