@@ -3,7 +3,7 @@ name: Cypress E2E
 on:
   workflow_call: {}
 permissions:
-  contents: read   # สำหรับ push ไปยัง gh-pages branch
+  contents: write # สำหรับ push ไปยัง gh-pages branch
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
           CYPRESS_baseUrl: http://localhost:3000
 
       - name: Check generated reports
-        run: ls -R ./cypress/reports  
+        run: ls -R ./cypress/reports
 
       - name: Deploy mochawesome report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
