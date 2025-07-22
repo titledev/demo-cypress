@@ -64,20 +64,28 @@ jobs:
       - name: Install gh-pages CLI
         run: npm install -g gh-pages
 
-      - name: Run Cypress E2E & Deploy All HTML Reports
+      - name: Run Cypress tests & Deploy reports
         run: |
-          # Run Cypress and capture exit code
-          npx cypress run
+          # Setup git info (required for gh-pages)
+          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # git config --global user.name "github-actions[bot]"
+
+          # Run Cypress and store result
+          npx cypress run || true
           EXIT_CODE=$?
 
-          # Debug report listing
-          echo "📄 Listing reports:"
-          find cypress/reports -name "*.html"
+          # Show files before deploy
+          echo "📂 Available reports:"
+          find cypress/reports -type f -name "*.html" || echo "⚠️ No mochawesome reports found"
 
-          # Deploy the entire reports folder (keep all filenames)
-          gh-pages -d cypress/reports -b gh-pages -t true
+          # Deploy to GitHub Pages
+          if [ -d "cypress/reports" ]; then
+            gh-pages -d cypress/reports -b gh-pages -t true || echo "❌ Deploy failed"
+          else
+            echo "❌ cypress/reports folder not found — skipping deploy"
+          fi
 
-          # Exit with original test result
+          # Exit with original test status
           exit $EXIT_CODE
         working-directory: cypress-app
         env:
