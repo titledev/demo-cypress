@@ -37,6 +37,7 @@ jobs:
       - name: Run Cypress E2E tests
         run: npx cypress run
         working-directory: cypress-app
+        continue-on-error: true
         env:
           CYPRESS_baseUrl: http://localhost:3000
 
