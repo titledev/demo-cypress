@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "report:merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/merged.json",
-    "report:html": "marge cypress/reports/merged.json -f report -o cypress/reports"
+    "report:html": "marge cypress/reports/merged.json -f report -o cypress/reports",
+    "generate-report-index": "ts-node cypress/scripts/generate-report-index.ts"
   },
   "author": "",
   "license": "ISC",
