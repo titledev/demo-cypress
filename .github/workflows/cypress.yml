@@ -2,7 +2,9 @@ name: Cypress E2E
 
 on:
   workflow_call: {}
-
+permissions:
+  contents: write   # สำหรับ push ไปยัง gh-pages branch
+  pages: write      # สำหรับ deploy GitHub Pages (optional)
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
