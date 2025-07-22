@@ -55,16 +55,26 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
 
-      - name: Run Cypress E2E tests
-        id: cypress
+      # - name: Deploy mochawesome report to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
+
+      - name: Run Cypress E2E tests & Deploy report
         run: |
-          npx cypress run || echo "Cypress tests failed, continue to deploy"
+          # Run Cypress and collect exit code
+          npx cypress run
+          EXIT_CODE=$?
+
+          echo "✅ Cypress run finished with code: $EXIT_CODE"
+
+          # Deploy to GitHub Pages
+          npx gh-pages -d ${{ github.workspace }}/cypress-app/cypress/reports -b gh-pages -t true
+
+          # Return Cypress exit code (to fail step if tests failed)
+          exit $EXIT_CODE
         working-directory: cypress-app
         env:
           CYPRESS_baseUrl: http://localhost:3000
-
-      - name: Deploy mochawesome report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
