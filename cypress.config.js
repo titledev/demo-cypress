@@ -4,6 +4,7 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
+      return config;
     },
     baseUrl: process.env.CYPRESS_baseUrl || "http://localhost:3000",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
