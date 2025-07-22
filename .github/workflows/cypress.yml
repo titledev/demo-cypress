@@ -41,21 +41,21 @@ jobs:
         env:
           CYPRESS_baseUrl: http://localhost:3000
 
-      - name: Check working directory
-        run: pwd
+      # - name: Check working directory
+      #   run: pwd
 
-      - name: Explore Cypress path
-        run: ls -R cypress-app/cypress
+      # - name: Explore Cypress path
+      #   run: ls -R cypress-app/cypress
 
-      - name: Confirm report exists
-        run: ls -R "${{ github.workspace }}/cypress-app/cypress/reports"
+      # - name: Confirm report exists
+      #   run: ls -R "${{ github.workspace }}/cypress-app/cypress/reports"
 
-      - name: Check generated reports
-        run: ls -R cypress-app/cypress/reports/mochawesome
+      # - name: Check generated reports
+      #   run: ls -R cypress-app/cypress/reports/mochawesome
 
       - name: Deploy mochawesome report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
 
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cypress-app/cypress/reports
+          publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
