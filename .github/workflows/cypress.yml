@@ -40,6 +40,9 @@ jobs:
         env:
           CYPRESS_baseUrl: http://localhost:3000
 
+      - name: Check generated reports
+        run: ls -R ./cypress/reports  
+
       - name: Deploy mochawesome report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
