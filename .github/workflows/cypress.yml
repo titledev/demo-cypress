@@ -42,10 +42,12 @@ jobs:
           CYPRESS_baseUrl: http://localhost:3000
 
       - name: Check generated reports
-        run: ls -R ./cypress/reports
+        working-directory: cypress-app
+        run: ls -R cypress-app/cypress/reports
 
       - name: Deploy mochawesome report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
+        
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cypress/reports
+          publish_dir: ./cypress-app/cypress/reports
