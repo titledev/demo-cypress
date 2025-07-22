@@ -34,60 +34,21 @@ jobs:
         run: npm install
         working-directory: cypress-app
 
-      # - name: Run Cypress E2E tests
-      #   run: npx cypress run
-      #   working-directory: cypress-app
-      #   env:
-      #     CYPRESS_baseUrl: http://localhost:3000
-
-      # - name: Run Cypress E2E tests
-      #   id: cypress
-      #   run: |
-      #     npx cypress run || echo "Cypress tests failed, continue to deploy"
-      #   working-directory: cypress-app
-      #   env:
-      #     CYPRESS_baseUrl: http://localhost:3000
-
-      # - name: Deploy mochawesome report to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v4
-
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
-
-      # - name: Deploy mochawesome report to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
-
-      - name: Install gh-pages CLI
-        run: npm install -g gh-pages
-
-      - name: Run Cypress tests & Deploy reports
-        run: |
-          # Setup git info (required for gh-pages)
-          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # git config --global user.name "github-actions[bot]"
-
-          # Run Cypress and store result
-          npx cypress run || true
-          EXIT_CODE=$?
-
-          # Show files before deploy
-          echo "📂 Available reports:"
-          find cypress/reports -type f -name "*.html" || echo "⚠️ No mochawesome reports found"
-
-          # Deploy to GitHub Pages
-          if [ -d "cypress/reports" ]; then
-            gh-pages -d cypress/reports -b gh-pages -t true || echo "❌ Deploy failed"
-          else
-            echo "❌ cypress/reports folder not found — skipping deploy"
-          fi
-
-          # Exit with original test status
-          exit $EXIT_CODE
+      - name: Run Cypress E2E tests
+        id: cypress
+        run: npx cypress run
         working-directory: cypress-app
         env:
           CYPRESS_baseUrl: http://localhost:3000
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Deploy mochawesome report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
+
+      - name: Fail if Cypress failed
+        if: steps.cypress.outcome == 'failure'
+        run: exit 1
