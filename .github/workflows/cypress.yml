@@ -40,6 +40,21 @@ jobs:
       #   env:
       #     CYPRESS_baseUrl: http://localhost:3000
 
+      # - name: Run Cypress E2E tests
+      #   id: cypress
+      #   run: |
+      #     npx cypress run || echo "Cypress tests failed, continue to deploy"
+      #   working-directory: cypress-app
+      #   env:
+      #     CYPRESS_baseUrl: http://localhost:3000
+
+      # - name: Deploy mochawesome report to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
+
       - name: Run Cypress E2E tests
         id: cypress
         run: |
@@ -50,7 +65,6 @@ jobs:
 
       - name: Deploy mochawesome report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: "${{ github.workspace }}/cypress-app/cypress/reports"
